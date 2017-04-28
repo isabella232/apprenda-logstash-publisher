@@ -1,3 +1,5 @@
 src/packages/
 **/bin/
 **/obj/
+**/.vs/
+/tools/Powershell/
