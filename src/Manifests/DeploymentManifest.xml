@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<appManifest xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.apprenda.com/DeploymentManifest http://apprenda.com/schemas/platform/6.5/DeploymentManifest.xsd" xmlns="http://schemas.apprenda.com/DeploymentManifest">
+  <applicationServices level="Authorization" enforceSsl="true" sessionReplication="false" loadBalancerUrlConfiguration="Preserve" stickySessions="false" />
+  <entitlementDefinitions>
+    <entitlementDefinition name="Standard" description="Log Aggregator Entitlement" publicName="Log Aggregator" isPublished="true" targetCurrency="USD">
+      <userBasedEntitlements>
+        <plans>
+          <plan name="Log Aggregator Plan" description="" planType="Perpetual" restrictionOnNumberOfSubscriptions="0">
+            <planModels>
+              <planModel type="Perpetual" amount="0" timeUnit="Unspecified" period="0" pricing="$0.00" />
+            </planModels>
+          </plan>
+        </plans>
+        <sections>
+          <section isHidden="false">
+            <components />
+          </section>
+        </sections>
+      </userBasedEntitlements>
+    </entitlementDefinition>
+  </entitlementDefinitions>
+  <services>
+    <service name="Apprenda.ClientServices.LogStash" scalingType="Automatic" maximumInstanceCount="4" minimumInstanceCount="1" />
+  </services>
+</appManifest>

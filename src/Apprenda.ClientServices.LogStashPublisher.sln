@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apprenda.ClientServices.LogStash", "Publisher\Apprenda.ClientServices.LogStash.csproj", "{23ED466B-8CD0-4651-BBC2-FA28560D6D77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apprenda.ClientServices.LogStash.Tests", "Test\Apprenda.ClientServices.LogStash.Tests.csproj", "{3F229AB8-F3EC-415C-BBE4-3C70F3FFDDDA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DE63D48C-A384-4F8C-B9B0-F7F01075683C}"
+	ProjectSection(SolutionItems) = preProject
+		Manifests\DeploymentManifest.xml = Manifests\DeploymentManifest.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{358A8A89-46BE-42E3-B764-CA14DEF04CA7}"
+	ProjectSection(SolutionItems) = preProject
+		..\tools\Test-LogForwardingService.ps1 = ..\tools\Test-LogForwardingService.ps1
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apprenda.ClientServices.LogStash.AddOn", "AddOn\Apprenda.ClientServices.LogStash.AddOn.csproj", "{F35B9C44-74F7-4196-B703-D3B547888932}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23ED466B-8CD0-4651-BBC2-FA28560D6D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23ED466B-8CD0-4651-BBC2-FA28560D6D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23ED466B-8CD0-4651-BBC2-FA28560D6D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23ED466B-8CD0-4651-BBC2-FA28560D6D77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F229AB8-F3EC-415C-BBE4-3C70F3FFDDDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F229AB8-F3EC-415C-BBE4-3C70F3FFDDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F229AB8-F3EC-415C-BBE4-3C70F3FFDDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F229AB8-F3EC-415C-BBE4-3C70F3FFDDDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F35B9C44-74F7-4196-B703-D3B547888932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F35B9C44-74F7-4196-B703-D3B547888932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F35B9C44-74F7-4196-B703-D3B547888932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F35B9C44-74F7-4196-B703-D3B547888932}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{358A8A89-46BE-42E3-B764-CA14DEF04CA7} = {DE63D48C-A384-4F8C-B9B0-F7F01075683C}
+	EndGlobalSection
+EndGlobal
