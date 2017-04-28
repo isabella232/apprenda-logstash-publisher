@@ -3,3 +3,4 @@ src/packages/
 **/obj/
 **/.vs/
 /tools/Powershell/
+*.zip
