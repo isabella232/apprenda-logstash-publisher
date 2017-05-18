@@ -1,87 +1,53 @@
 ﻿[CmdletBinding()]
 param(
-    $configuration = "Debug",
-    $timeout = 10
+    $Configuration = "Debug",
+    $Step = 1
 )
+
+$here = Split-Path -Parent $MyInvocation.MyCommand.Path
+. "$here\Build-LogStashArchives.ps1"
+. "$here\Deploy-LogForwardingService.ps1"
+. "$here\Promote-LogForwardingService.ps1"
+
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$msBuildPath = (Get-MsBuildVersion -Version Latest).GetValue("MSBuildToolsPath")
-$solutionPath = "./src/Apprenda.ClientServices.LogStashPublisher.sln"
-$applicationName = "logstashforwarder"
-$archivePath = "./logstashforwarder.zip"
-$version = "v1"
+if ($Step -eq 1) {
+    "Step 1 startup ELK, Build and Deploy Archives"
 
-"Checking for MSBuild."
-if($env:Path -notlike "*$msBuildPath*") {
-    "Adding MSBuild to your path."
-    $env:Path += ";$msBuildPath"
-} else {
-    "Found MSBuild."
+    "Starting up ELK Stack"
+    Get-Job -Name "ELK Job" -ErrorAction Continue | Stop-Job -ErrorAction Continue
+    Get-Job -Name "ELK Job" -ErrorAction Continue | Remove-Job -ErrorAction Continue
+    Start-Job { Set-Location $args[0]; Invoke-Expression "docker-compose.exe up" } -ArgumentList "$here\docker" -Name "ELK Job"
+
+    Build-LogStashArchives -Configuration $Configuration
+    Deploy-LogForwardingService
 }
 
-"Cleaning Solution."
-Clean-Solution $solutionPath
+if ($Step -eq 2) {
+    "Step 2 promote and test"
+    
+    Promote-LogForwardingService
 
-"Building Solution."
-Build-Solution $solutionPath
+    "Turn logging up to 11"
+    Set-ApprendaGlobalLogLevel -LogLevel "Debug"
 
-Package-ApprendaApplication -ArchivePath $archivePath -Services (@{ Name = "LogStashPublisher"; Path ="./src/Publisher/bin/$configuration" })
+    "Starting to watch docker.  Press Ctrl-C to stop the test.  Rember to Stop and Remove the `"ELK Job`" job when it's completed."
+    $job = Get-Job -Name "ELK Job"
+    
+    do {
+        if ($job.HasMoreData) {
+            $output = Receive-Job $job -ErrorAction Continue
+            foreach ($line in $output) {
+                Write-Host $line
 
-"Signing into Apprenda"    
-New-ApprendaSession "jvanbrackel@apprenda.com" "password" "JvB" "https://apps.apprenda.jvb"
-
-"Checking for an existing application"
-if(Get-ApprendaApplication $applicationName -ErrorAction SilentlyContinue) {
-    "Removing $applicationName"
-    Remove-ApprendaApplication $applicationName
+            }
+        }
+        Start-Sleep -Seconds 1
+    } while ($true)
+    
 }
 
-"Creating $applicationName"
-New-ApprendaApplication $applicationName
 
-"Uploading $archivePath"
-Set-ApprendaApplicationArchive $applicationName $version $archivePath
 
-"Promoting to Published"
-Promote-ApprendaApplication -ApplicationAlias $applicationName -VersionAlias $version -Stage "Published"
-
-"Setting Registry Key"
-New-ApprendaRegistrySetting -Setting "Apprenda.Logging.ExternalServiceAppVersion" -Value "$applicationName(v1)/LogStashForwarderService" -ErrorAction SilentlyContinue
-
-"Turn the log level up to 11"
-Set-ApprendaGlobalLogLevel "Debug"
-
-"Start Listening"
-$loopCount = 0
-$workingDirectory = Get-Location
-$foundOrErrorOrTimeout = $false
-$listenerJob = Start-Job { Set-Location $args[0]; .\tools\Run-UdpListener.ps1 10000 } -ArgumentList $workingDirectory
-while(!($foundOrErrorOrTimeout)) {
-    if($loopCount -ge $timeout)
-    {
-        $foundOrErrorOrTimeout = $true
-    }	
-    $loopCount++
-    if($listenerJob.HasMoreData)
-    {
-        $jobOutput = $listenerJob | Receive-Job
-        Write-Host $jobOutput
-    }
-    Start-Sleep -Seconds 1
-}
-
-$listenerJob.StopJob()
-
-while($listenerJob.PSEndTime -eq $null)
-{
-    "Waiting for the listener to stop."
-    Start-Sleep -Seconds 2
-}
-
-"Turn the log level back down."
-Set-ApprendaGlobalLogLevel "Error"
-
-"Cleaning up the listener job."
-$listenerJob | Remove-Job

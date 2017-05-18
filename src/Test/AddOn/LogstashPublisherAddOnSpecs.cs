@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using Apprenda.ClientServices.LogStash.AddOn;
@@ -19,25 +20,30 @@ namespace Apprenda.ClientServices.LogsStash.Tests.AddOn
             private static OperationResult _result;
             private static string _expectedHostname;
             private static int _expectedPort;
+            private static string _expectedProtocol;
             private static string _expectedFormattableString;
             private const string HostNameKey = "hostname";
-            private const string UdpPortKey = "udpListenerPort";
+            private const string PortKey = "port";
+            private const string ProtocolKey = "protocol";
 
-            Establish context = () =>
+
+            private Establish context = () =>
                                 {
                                     _expectedHostname = "hostnameTest";
                                     _expectedPort = new Random().Next(1, 5000);
+                                    _expectedProtocol = "http";
                                     
-                                    var manifest = ReadTestManifest(@".\AddonManifest.xml");
+                                    var manifest = ReadTestManifest("Apprenda.ClientServices.LogsStash.Tests.AddonManifest.xml");
                                     manifest.Properties.Single(p => p.Key == HostNameKey).Value = _expectedHostname;
-                                    manifest.Properties.Single(p => p.Key == UdpPortKey).Value = _expectedPort.ToString();
-                                    _expectedFormattableString = $"udp://{_expectedHostname}:{_expectedPort}";
+                                    manifest.Properties.Single(p => p.Key == PortKey).Value = _expectedPort.ToString();
+                                    manifest.Properties.Single(p => p.Key == ProtocolKey).Value = _expectedProtocol;
+                                    _expectedFormattableString = $"{_expectedProtocol}://{_expectedHostname}:{_expectedPort}";
                                     _addOnTestRequest = new AddonTestRequest { Manifest = manifest };
                                 };
 
             Because of = () => _result = Subject.Test(_addOnTestRequest);
 
-            It should_return_a_friendly_message_that_the_test_was_successful = () => _result.EndUserMessage.ShouldEqual("Addon test was successful!");
+            It should_return_a_friendly_message_that_the_test_was_successful = () => _result.EndUserMessage.ShouldEqual("AddOn test was successful!");
 
             It should_return_success = () => _result.IsSuccess.ShouldBeTrue();
         }
@@ -49,18 +55,23 @@ namespace Apprenda.ClientServices.LogsStash.Tests.AddOn
             private static string _expectedHostname;
             private static int _expectedPort;
             private static string _expectedFormattableString;
+            private static string _expectedProtocol = "udp";
             private const string HostNameKey = "hostname";
-            private const string UdpPortKey = "udpListenerPort";
+            private const string PortKey = "port";
+            private const string ProtocolKey = "protocol";
 
-            Establish context = () =>
+
+            private Establish context = () =>
             {
                 _expectedHostname = "hostnameTest";
                 _expectedPort = new Random().Next(1, 5000);
+                _expectedProtocol = "tcp";
 
-                var manifest = ReadTestManifest(@".\AddonManifest.xml");
+                var manifest = ReadTestManifest("Apprenda.ClientServices.LogsStash.Tests.AddonManifest.xml");
                 manifest.Properties.Single(p => p.Key == HostNameKey).Value = _expectedHostname;
-                manifest.Properties.Single(p => p.Key == UdpPortKey).Value = _expectedPort.ToString();
-                _expectedFormattableString = $"udp://{_expectedHostname}:{_expectedPort}";
+                manifest.Properties.Single(p => p.Key == PortKey).Value = _expectedPort.ToString();
+                manifest.Properties.Single(p => p.Key == ProtocolKey).Value = _expectedProtocol.ToString();
+                _expectedFormattableString = $"{_expectedProtocol}://{_expectedHostname}:{_expectedPort}";
                 _addOnProvisionRequest = new AddonProvisionRequest() { Manifest = manifest };
             };
 
@@ -80,17 +91,21 @@ namespace Apprenda.ClientServices.LogsStash.Tests.AddOn
             private static OperationResult _result;
             private static string _expectedHostname;
             private static int _expectedPort;
+            private static string _expectedProtocol;
             private const string HostNameKey = "hostname";
-            private const string UdpPortKey = "udpListenerPort";
+            private const string PortKey = "port";
+            private const string ProtocolKey = "protocol";
 
-            Establish context = () =>
+            private Establish context = () =>
             {
                 _expectedHostname = "hostnameTest";
                 _expectedPort = new Random().Next(1, 5000);
+                _expectedProtocol = "pipe";
 
-                var manifest = ReadTestManifest(@".\AddonManifest.xml");
+                var manifest = ReadTestManifest("Apprenda.ClientServices.LogsStash.Tests.AddonManifest.xml");
                 manifest.Properties.Single(p => p.Key == HostNameKey).Value = _expectedHostname;
-                manifest.Properties.Single(p => p.Key == UdpPortKey).Value = _expectedPort.ToString();
+                manifest.Properties.Single(p => p.Key == PortKey).Value = _expectedPort.ToString();
+                manifest.Properties.Single(p => p.Key == ProtocolKey).Value = _expectedProtocol.ToString();
                 _addonDeprovisionRequest = new AddonDeprovisionRequest() { Manifest = manifest };
             };
 
@@ -103,13 +118,22 @@ namespace Apprenda.ClientServices.LogsStash.Tests.AddOn
 
 
 
-        private static AddonManifest ReadTestManifest(string path)
+        private static AddonManifest ReadTestManifest(string name)
         {
-            var xml = File.ReadAllText(path);
-            var sr = new StringReader(xml);
-            var xmlReader = new XmlTextReader(sr);
-            var serializer = new XmlSerializer(typeof(AddonManifest));
-            return serializer.Deserialize(xmlReader) as AddonManifest;
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = name;
+
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+                if (stream != null)
+                    using (var streamReader = new StreamReader(stream))
+                    {
+                        var xml = streamReader.ReadToEnd();
+                        var sr = new StringReader(xml);
+                        var xmlReader = new XmlTextReader(sr);
+                        var serializer = new XmlSerializer(typeof(AddonManifest));
+                        return serializer.Deserialize(xmlReader) as AddonManifest;
+                    }
+            throw new Exception($"Resource {resourceName} not found.");
         }
     }
     

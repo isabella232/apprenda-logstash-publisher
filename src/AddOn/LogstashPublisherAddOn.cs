@@ -11,7 +11,7 @@ namespace Apprenda.ClientServices.LogStash.AddOn
         {
             try
             {
-                return new ProvisionAddOnResult(GetUdpListenerUrl(request.Manifest), true, "AddOn successfully provisioned!");
+                return new ProvisionAddOnResult(GetListenerUrl(request.Manifest), true, "AddOn successfully provisioned!");
             }
             catch (Exception ex)
             {
@@ -32,7 +32,7 @@ namespace Apprenda.ClientServices.LogStash.AddOn
         {
             try
             {
-                GetUdpListenerUrl(request.Manifest);
+                GetListenerUrl(request.Manifest);
                 return new OperationResult()
                 {
                     EndUserMessage = "AddOn test was successful!",
@@ -48,11 +48,12 @@ namespace Apprenda.ClientServices.LogStash.AddOn
             }
         }
 
-        private string GetUdpListenerUrl(AddonManifest manifest)
+        private string GetListenerUrl(AddonManifest manifest)
         {
             var hostname = manifest.Properties.Single(p => p.Key == "hostname").Value;
             var port = manifest.Properties.Single(p => p.Key == "port").Value;
-            return $"udp://{hostname}:{port}";
+            var protocol = manifest.Properties.Single(p => p.Key == "protocol").Value;
+            return $"{protocol}://{hostname}:{port}";
         }
     }
 }

@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="AddOn\LogstashPublisherAddOnSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublisherFactorySpecs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -73,12 +74,16 @@
       <Project>{f35b9c44-74f7-4196-b703-d3b547888932}</Project>
       <Name>Apprenda.ClientServices.LogStash.AddOn</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Publisher\Apprenda.ClientServices.LogStash.csproj">
+      <Project>{23ED466B-8CD0-4651-BBC2-FA28560D6D77}</Project>
+      <Name>Apprenda.ClientServices.LogStash</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Manifests\AddonManifest.xml">
+    <EmbeddedResource Include="..\Manifests\AddonManifest.xml">
       <Link>AddonManifest.xml</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

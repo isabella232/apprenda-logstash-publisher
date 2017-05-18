@@ -5,7 +5,7 @@
    xsi:schemaLocation="http://schemas.apprenda.com/AddonManifest http://apprenda.com/schemas/platform/6.7/AddonManifest.xsd"
    name="Logstash"
    description="Provides access to a logstash server's configuration by development team."
-   deploymentNotes="See the readme file for detailed notes on the operation and management of this add-on"
+   deploymentNotes="See the readme file (TBD) for detailed notes on the operation and management of this add-on"
    developerHelp="This add-on creates a logstash index for each instance of the add-on that's provisioned. "
    vendor="Apprenda"
    author="JvB"
@@ -18,10 +18,16 @@
       description="Hostname or IP Address of the logstash server."
       isEncrypted="false" />
     <property
-      key="udpListenerPort"
-      displayName="UDP Port"
-      description="Port on which the Logstash UDP Input plugin is listening. For more information see
-                   https://www.elastic.co/guide/en/logstash/current/plugins-inputs-udp.html"
+      key="port"
+      displayName="Port"
+      description="Port on which the Logstash Input plugin is listening."
       isEncrypted="false"/>
+	<property
+		key="protocol"
+		displayName="Protocol"
+		description="Protocol the Logstatsh Input plugin is expecting.  Acceptable values are tcp, udp, http and https.  
+                 Please note in order to use https, the nodes running this service will have to have a valid certificate 
+                 chain to validate against the logstash server."
+		isEncrypted="false" />
   </properties>
 </addonManifest>

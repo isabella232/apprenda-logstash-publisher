@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.ServiceModel;
 using System.Threading;
 using Apprenda.ClientServices.LogStash.Publishers;
@@ -20,9 +21,16 @@ namespace Apprenda.ClientServices.LogStash.Services
     {
         internal static readonly ConcurrentQueue<LogMessageDTO> LogQueue = new ConcurrentQueue<LogMessageDTO>();
 
-        public LogStashForwarderService()
+        public LogStashForwarderService() : this(new PublisherFactory())
         {
-            var publisher = new LogStashUdpPublisher("localhost", 10000);
+
+        }
+
+        private LogStashForwarderService(PublisherFactory publisherFactory)
+        {
+            const string connectionStringName = "logstashConnecctionString";
+            var publisher =
+                publisherFactory.GetPublisherByAddOnConnection(ConfigurationManager.AppSettings[connectionStringName]);
             var publisherThread = new Thread(publisher.Publish);
             publisherThread.Start();
         }
