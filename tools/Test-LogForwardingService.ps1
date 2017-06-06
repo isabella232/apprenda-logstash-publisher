@@ -5,9 +5,6 @@ param(
 )
 
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
-. "$here\Build-LogStashArchives.ps1"
-. "$here\Deploy-LogForwardingService.ps1"
-. "$here\Promote-LogForwardingService.ps1"
 
 
 Set-StrictMode -Version Latest
@@ -21,13 +18,12 @@ if ($Step -eq 1) {
     Get-Job -Name "ELK Job" -ErrorAction Continue | Remove-Job -ErrorAction Continue
     Start-Job { Set-Location $args[0]; Invoke-Expression "docker-compose.exe up" } -ArgumentList "$here\docker" -Name "ELK Job"
 
-    Build-LogStashArchives -Configuration $Configuration
-    Deploy-LogForwardingService
+    .\tools\Build-LogstashArchives.ps1 -Configuration $Configuration
+    .\tools\Deploy-LogForwardingService.ps1 -PlatformUrl $PlatformUrl -Username $Username -Password $Password -Tenant $Tenant
 }
 
 if ($Step -eq 2) {
-    "Step 2 promote and test"
-    
+    "Step 2 promote and test"    
     Promote-LogForwardingService
 
     "Turn logging up to 11"
@@ -41,13 +37,8 @@ if ($Step -eq 2) {
             $output = Receive-Job $job -ErrorAction Continue
             foreach ($line in $output) {
                 Write-Host $line
-
             }
         }
         Start-Sleep -Seconds 1
     } while ($true)
-    
 }
-
-
-
