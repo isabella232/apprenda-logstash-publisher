@@ -1,7 +1,11 @@
 ﻿[CmdletBinding()]
 param(
     $Configuration = "Debug",
-    $Step = 1
+    $Step = 1,
+    $PlatformUrl,    
+    $Username,
+    $Password,
+    $Tenant
 )
 
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -24,7 +28,7 @@ if ($Step -eq 1) {
 
 if ($Step -eq 2) {
     "Step 2 promote and test"    
-    Promote-LogForwardingService
+    .\tools\Promote-LogForwardingService.ps1
 
     "Turn logging up to 11"
     Set-ApprendaGlobalLogLevel -LogLevel "Debug"
