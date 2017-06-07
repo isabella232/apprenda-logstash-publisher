@@ -11,7 +11,7 @@ logstash.  It is based on guidance [provided by Apprenda for integrating with Sp
 
 <div style="border: solid 1px red; background-color: #ffe6e6; color: black; padding: 10px">
 <h4>Warning</h4>
-You must run this from a Powershell window with administrative privleges.  Also, be sure that your <a href="https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.core/about/about_execution_policies">execution policy</a> is overly restrictive to build the code.  Bypass execution policy is sufficient to work with this product.
+You must run this from a Powershell window with administrative privleges.  Also, be sure that your <a href="https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.core/about/about_execution_policies">execution policy</a> is not overly restrictive to build the code.  Bypass execution policy is sufficient to work with this product.
 
 Also, the test scripts in the product leverage Docker and has been tested with Docker for Windows.  This version of docker has [signficant installation requirements](https://docs.docker.com/docker-for-windows/install/#what-to-know-before-you-install).  This product may also be used with the legacy desktop solution, [Docker Toolbox](https://docs.docker.com/toolbox/overview/), but that configuration is not covered in this document.
 </div>
@@ -91,7 +91,7 @@ input {
 ```
 
 # Testing the code
-Setting up logstash in docker goes beyond the scope of this document.  [tools/Test-LogForwardingService.ps1](tools/Test-LogForwardingService.ps1) can be used to run a test of the code.  As with installing the logstash add-on, there is a manual step of setting up the add-on properties.
+(Setting up logstash in docker)[https://www.elastic.co/guide/en/logstash/current/docker.html] goes beyond the scope of this document.  [tools/Test-LogForwardingService.ps1](tools/Test-LogForwardingService.ps1) can be used to run a test of the code.  As with installing the logstash add-on, there is a manual step of setting up the add-on properties.
 
 ```powershell
 $apprendaCredentials = Get-Credential
