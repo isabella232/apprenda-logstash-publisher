@@ -13,7 +13,7 @@ You must run this from a Powershell window with administrative privleges.  Also,
 Also, the test scripts in the product leverage Docker and has been tested with Docker for Windows.  This version of docker has [signficant installation requirements](https://docs.docker.com/docker-for-windows/install/#what-to-know-before-you-install).  This product may also be used with the legacy desktop solution, [Docker Toolbox](https://docs.docker.com/toolbox/overview/), but that configuration is not covered in this document.
 </div>
 
-You may build and install prerequisites by hand or use the provided script in [tools/Install-Prerequisites.ps1](blob/master/tools/Install-Prerequisites.ps1)
+You may build and install prerequisites by hand or use the provided script in [tools/Install-Prerequisites.ps1](tools/Install-Prerequisites.ps1)
 
 This script will:
 * Download and install the Apprenda SDK if it's not installed.
@@ -28,7 +28,7 @@ This script will:
 ```powershell
 # From the working directory
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-./tools/Install-Prerequisites.ps1
+.tools/Install-Prerequisites.ps1
 ```
 
 ### Apprenda SDK
@@ -44,10 +44,10 @@ There are also prerequisites on [MSBuild](https://github.com/Microsoft/msbuild).
 [Docker](https://www.docker.com) and [Docker Compose](https://github.com/docker/compose) are used to test the log forwarding service to standup a local [Elastic Stack](https://www.elastic.co/products)
 
 ## Building
-Once the prerequisites are installed. Run the [tools/Build-LogstashArchives.ps1](blob/master/tools/Build-LogstashArchives.ps1) script.
+Once the prerequisites are installed. Run the [tools/Build-LogstashArchives.ps1](tools/Build-LogstashArchives.ps1) script.
 
 ```powershell
-./tools/Build-LogstashArchives.ps1
+.tools/Build-LogstashArchives.ps1
 ```
 
 This will create logstashforwarder.zip and logstashAddOn.zip archives in this folder.
@@ -57,9 +57,9 @@ This will create logstashforwarder.zip and logstashAddOn.zip archives in this fo
 In order to install and test the binaries you will need an Apprenda Platform (version 6.7 or later) available that is able to communicate to the test Elastic Stack.  [Installation of the Apprenda Platform](http://docs.apprenda.com/current/download) is outside of the scope of this document.
 
 1. Build the archives per the instructions above.
-2. Deploy the log forwarding service using the [tools/Deploy-LogForwardingSerivce.ps1](blob/master/tools/Deploy-LogForwardingService.ps1) script.
+2. Deploy the log forwarding service using the [tools/Deploy-LogForwardingSerivce.ps1](tools/Deploy-LogForwardingService.ps1) script.
 3. Log into the platform SOC and set the logstash properties for the logstash add-on.  The instructions for doing so are at the end of the Deploy-LogForwardingService.ps1
-4. Provision and instance of the add-on and promote the Log forwarding service using the [tools/Promote-LogForwardingService.ps1](blob/master/tools/Promote-LogForwardingService.ps1) script.
+4. Provision and instance of the add-on and promote the Log forwarding service using the [tools/Promote-LogForwardingService.ps1](tools/Promote-LogForwardingService.ps1) script.
 
 ```powershell
 $apprendaCredentials = Get-Credential
@@ -69,7 +69,7 @@ $apprendaCredentials = Get-Credential
 ```
 
 ## Logstash Setup
-Your logstash configuration will need an input for http.  Https is acceptable as long as the the Apprenda logstash Add-On has been configured to use https and the full certificate chain of trust is verifyable.  Here is the example from the [tools/docker/logstash/pipeline/logstash.conf](blob/master/tools/docker/logstash/pipeline/logstash.conf) file used for testing this product.
+Your logstash configuration will need an input for http.  Https is acceptable as long as the the Apprenda logstash Add-On has been configured to use https and the full certificate chain of trust is verifyable.  Here is the example from the [tools/docker/logstash/pipeline/logstash.conf](tools/docker/logstash/pipeline/logstash.conf) file used for testing this product.
 
 ```
 input {
@@ -85,7 +85,7 @@ input {
 ```
 
 # Testing the code
-Setting up logstash in docker goes beyond the scope of this document.  [tools/Test-LogForwardingService.ps1](blob/master/tools/Test-LogForwardingService.ps1) can be used to run a test of the code.  As with installing the logstash add-on, there is a manual step of setting up the add-on properties.
+Setting up logstash in docker goes beyond the scope of this document.  [tools/Test-LogForwardingService.ps1](tools/Test-LogForwardingService.ps1) can be used to run a test of the code.  As with installing the logstash add-on, there is a manual step of setting up the add-on properties.
 
 ```powershell
 $apprendaCredentials = Get-Credential
