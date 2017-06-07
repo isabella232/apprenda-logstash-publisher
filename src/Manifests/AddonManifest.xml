@@ -5,7 +5,7 @@
    xsi:schemaLocation="http://schemas.apprenda.com/AddonManifest http://apprenda.com/schemas/platform/6.7/AddonManifest.xsd"
    name="Logstash"
    description="Provides access to a logstash server's configuration by development team."
-   deploymentNotes="See the readme file (TBD) for detailed notes on the operation and management of this add-on"
+   deploymentNotes="See the readme file for detailed notes on the operation and management of this add-on"
    developerHelp="This add-on creates a logstash index for each instance of the add-on that's provisioned. "
    vendor="Apprenda"
    author="JvB"
