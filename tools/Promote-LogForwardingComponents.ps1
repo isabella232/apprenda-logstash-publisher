@@ -9,11 +9,16 @@ process {
     $applicationName = "logstashforwarder"
     $version = "v1"
 
-    "Acquiring a Logstash Add-On Instnace if needed"
-    $addOnInstance = Get-ApprendaAddOnInstance -Alias $addOnAlias -InstanceAlias $addOnInstanceAlias
+    "Acquiring a Logstash Add-On Instance if needed"
+    try {
+        $addOnInstance = Get-ApprendaAddOnInstance -Alias $addOnAlias -InstanceAlias $addOnInstanceAlias
+    } catch {
+        $addOnInstance = $null
+    } 
+
         
     if ($addOnInstance -eq $null) {
-        "No instance found. Creating an instnace of $addOnAlias and naming it $addOnInstanceAlias" 
+        "No instance found. Creating an instance of $addOnAlias and naming it $addOnInstanceAlias" 
         New-ApprendaAddOnInstance -Alias $addOnAlias -InstanceAlias $addOnInstanceAlias        
     }
     else {

@@ -31,5 +31,5 @@ process {
     Package-ApprendaApplication -ArchivePath $archivePath -Services (@{ Name = "LogStashPublisher"; Path = "./src/Publisher/bin/$Configuration" })
 
     "Packaging the Logstash AddOn"
-    Package-ApprendaAddOn -ArchivePath $addOnPath -AddOnPath "./src/AddOn/bin/$Configuration" -ManifestPath "./src/Manifests/AddonManifest.xml" -IconPath "./src/Icons/icon.png" -APIPath "./lib/Apprenda 6.7.0/SaaSGrid.API.dll"
+    Package-ApprendaAddOn -ArchivePath $addOnPath -AddOnPath "./src/AddOn/bin/$Configuration" -ManifestPath "./src/Manifests/AddonManifest.xml" -IconPath "./src/Icons/icon.png" -APIPath "C:\Program Files (x86)\Apprenda\SDK\API Files\SaaSGrid.API.dll"
 }

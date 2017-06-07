@@ -2,6 +2,9 @@
 This application represents a possible solution to publish apprenda logs to 
 logstash.  It is based on guidance [provided by Apprenda for integrating with Splunk](https://github.com/Apprenda/Splunk).
 
+# What is it?
+This product is two components that run on the Apprenda Platform.  The first is an [Apprenda Platform Add-On](http://docs.apprenda.com/current/addons), that manages connection information for development teams to connect to an external Logstash instance.  The second is a [Apprenda log aggregator extension](http://docs.apprenda.com/current/extensions), that is responsible for receving logs from the Apprenda Platform and forwarding them to logstash via connection information provided by the aformentioned add-on.
+
 ## A note about Audit Logs
 [Apprenda Audit Logs](http://docs.apprenda.com/7-0/managing-event-logs#Audit%20Logs) are note currently supported by the log forwarder extension.  In order to aggregate these logs into Logstash, it's suggested that you use the [Logstash jdbc input plugin](https://www.elastic.co/guide/en/logstash/current/plugins-inputs-jdbc.html) attached to the dbo.AuditLog table in the ```Apprenda Auditing``` database.
 
@@ -47,10 +50,10 @@ The build scripts developed for this application rely upon the powershell librar
 [Docker](https://www.docker.com) and [Docker Compose](https://github.com/docker/compose) are used to test the log forwarding service to standup a local [Elastic Stack](https://www.elastic.co/products) for testing.
 
 ## Building
-Once the prerequisites are installed. Run the [tools/Build-LogstashArchives.ps1](tools/Build-LogstashArchives.ps1) script.
+Once the prerequisites are installed. Run the [tools/BuildAndPackage-LogForwardingComponents.ps1](tools/BuildAndPackage-LogForwardingComponents.ps1) script.
 
 ```powershell
-.tools/Build-LogstashArchives.ps1
+.tools/BuildAndPackage-LogForwardingComponents.ps1
 ```
 
 This will create logstashforwarder.zip and logstashAddOn.zip archives in this folder.
@@ -59,20 +62,41 @@ This will create logstashforwarder.zip and logstashAddOn.zip archives in this fo
 ## Log Forwarding Service and Logstash AddOn
 In order to install and test the binaries you will need an Apprenda Platform (version 6.7 or later) available that is able to communicate to the test Elastic Stack.  [Installation of the Apprenda Platform](http://docs.apprenda.com/current/download) is outside of the scope of this document.
 
-1. Build the archives per the instructions above.
-2. Deploy the log forwarding service using the [tools/Deploy-LogForwardingSerivce.ps1](tools/Deploy-LogForwardingService.ps1) script.
-3. Log into the platform SOC and set the logstash properties for the logstash add-on.  The instructions for doing so are at the end of the Deploy-LogForwardingService.ps1
-4. Provision and instance of the add-on and promote the Log forwarding service using the [tools/Promote-LogForwardingService.ps1](tools/Promote-LogForwardingService.ps1) script.
+1. Build the log forwarder application and logstash addon archives per the instructions above.
+2. Deploy the logstash log forwarding extension and the logstash add-on using the [tools/Deploy-LogForwardingComponents.ps1](tools/Deploy-LogForwardingComponents.ps1) script.
+3. Log into the platform SOC and set the logstash connection properties for the logstash add-on.  The instructions for doing so are at the end of the Deploy-LogForwardingComponents.ps1 and are covered later in this document.
+4. Provision and instance of the add-on and promote the log forwarding extension using the [tools/Promote-LogForwardingComponents.ps1](tools/Promote-LogForwardingComponents.ps1) script.
 
 ```powershell
 $apprendaCredentials = Get-Credential
 $configuration = "Debug"
 $platformUrl = "https://yourplatform/"
 $tenant = "YourTenant"
-.\tools\Build-LogstashArchives.ps1 -Configuration $configuration
-.\tools\Deploy-LogForwardingService.ps1 -PlatformUrl $platformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $tenant
-.\tools\Promote-LogForwardingService.ps1
+.\tools\BuildAndPackage-LogForwardingComponents.ps1 -Configuration $configuration
+.\tools\Deploy-LogForwardingComponents.ps1 -PlatformUrl $platformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $tenant
+.\tools\Promote-LogForwardingComponents.ps1
 ```
+
+## Setting up the logstash add-on connection properties
+Currently (as of Apprenda Cloud Platform 7.0) the [Platform Operations API](http://docs.apprenda.com/restapi/platformops/v1) does not support the setting of Properties to configure add-ons via automation.  Therefore, an operator is required to setup the properties of the Logstash Add-On
+
+1. Navigate to the SOC via https://yourplatform/SOC.
+2. Select Configuration > Platfom Add-Ons.
+![Configuration > Platform Add-Ons](images/SetAddOnProperties-1.png)
+3. For the logstash Add-On click the Edit button.
+![Edit](images/SetAddOnProperties-2.png)
+4. Click on the Configuration Tab
+![Configuration](images/SetAddOnProperties-3.png)
+5. For each property, you need to set the value.  To do so click on the pencil icon next to each property.
+![Edit Property](images/SetAddOnProperties-4.png)
+6. Set the property and click OK.  You'll do this for Hostname, Port and Protocol
+![Set Property](images/SetAddOnProperties-5.png)
+7. Once all the properties are set hit Save.
+![Save](images/SetAddOnProperties-6.png)
+8. Click Yes to confirm that you do want to modify the Platform Add-On.
+![Confirm](images/SetAddOnProperties-7.png)
+9. The Add-On is now ready for developers to consume.
+![Done](images/SetAddOnProperties-8.png)
 
 ## Logstash Setup
 Your logstash configuration will need an input for http.  Https is acceptable as long as the the Apprenda logstash Add-On has been configured to use https and the full certificate chain of trust is verifyable.  Here is the example from the [tools/docker/logstash/pipeline/logstash.conf](tools/docker/logstash/pipeline/logstash.conf) file used for testing this product.

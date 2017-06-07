@@ -37,7 +37,11 @@ New-ApprendaApplication $applicationName
 Set-ApprendaApplicationArchive $applicationName $version $archivePath
 
 "Creating the Apprenda AddOn if needed"
-$currentAddOn = Get-ApprendaAddOn -Alias $addOnAlias  -ErrorAction SilentlyContinue
+try {
+    $currentAddOn = Get-ApprendaAddOn -Alias $addOnAlias
+} catch {
+    $currentAddOn = $null
+}
     
 if ($currentAddOn -ne $null) {
     "Add-on $addOnAlias found."

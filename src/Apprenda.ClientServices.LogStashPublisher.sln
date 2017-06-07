@@ -8,16 +8,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apprenda.ClientServices.LogStash.Tests", "Test\Apprenda.ClientServices.LogStash.Tests.csproj", "{3F229AB8-F3EC-415C-BBE4-3C70F3FFDDDA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DE63D48C-A384-4F8C-B9B0-F7F01075683C}"
-	ProjectSection(SolutionItems) = preProject
-		Manifests\DeploymentManifest.xml = Manifests\DeploymentManifest.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{358A8A89-46BE-42E3-B764-CA14DEF04CA7}"
-	ProjectSection(SolutionItems) = preProject
-		..\tools\BuildAndDeploy-LogForwardingService.ps1 = ..\tools\BuildAndDeploy-LogForwardingService.ps1
-		..\tools\Run-UdpListener.ps1 = ..\tools\Run-UdpListener.ps1
-		..\tools\Test-LogForwardingService.ps1 = ..\tools\Test-LogForwardingService.ps1
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apprenda.ClientServices.LogStash.AddOn", "AddOn\Apprenda.ClientServices.LogStash.AddOn.csproj", "{F35B9C44-74F7-4196-B703-D3B547888932}"
 EndProject
@@ -50,7 +40,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{358A8A89-46BE-42E3-B764-CA14DEF04CA7} = {DE63D48C-A384-4F8C-B9B0-F7F01075683C}
 		{A23B36F2-038E-4269-82BD-A528514F22D0} = {DE63D48C-A384-4F8C-B9B0-F7F01075683C}
 	EndGlobalSection
 EndGlobal

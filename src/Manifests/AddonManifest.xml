@@ -9,7 +9,7 @@
    developerHelp="This add-on creates a logstash index for each instance of the add-on that's provisioned. "
    vendor="Apprenda"
    author="JvB"
-   version="0.0">
+   version="1.0">
   <!-- Operations Properties -->
   <properties>
     <property
@@ -22,12 +22,12 @@
       displayName="Port"
       description="Port on which the Logstash Input plugin is listening."
       isEncrypted="false"/>
-	<property
-		key="protocol"
-		displayName="Protocol"
-		description="Protocol the Logstatsh Input plugin is expecting.  Acceptable values are tcp, udp, http and https.  
-                 Please note in order to use https, the nodes running this service will have to have a valid certificate 
+	  <property
+      key="protocol"
+      displayName="Protocol"
+      description="Protocol the Logstatsh Input plugin is expecting.  Acceptable values are tcp, udp, http and https.  
+                  Please note in order to use https, the nodes running this service will have to have a valid certificate 
                  chain to validate against the logstash server."
-		isEncrypted="false" />
+		  isEncrypted="false" />
   </properties>
 </addonManifest>
