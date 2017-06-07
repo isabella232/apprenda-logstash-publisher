@@ -38,10 +38,10 @@ The [Apprenda SDK](https://docs.apprenda.com/downloads#tools) is a dependency to
 The build scripts developed for this application rely upon the powershell library available at [https://github.com/jasonvanbrackel/powershell](https://github.com/jasonvanbrackel/powershell).  
 
 ### MSBuild 
-There are also prerequisites on [MSBuild](https://github.com/Microsoft/msbuild).  MSBuild is used by the scripts to build the various Visual Studio Solution files.
+[MSBuild](https://github.com/Microsoft/msbuild) is used by the scripts to build the various Visual Studio Solution files.
 
 ### Docker
-[Docker](https://www.docker.com) and [Docker Compose](https://github.com/docker/compose) are used to test the log forwarding service to standup a local [Elastic Stack](https://www.elastic.co/products)
+[Docker](https://www.docker.com) and [Docker Compose](https://github.com/docker/compose) are used to test the log forwarding service to standup a local [Elastic Stack](https://www.elastic.co/products) for testing.
 
 ## Building
 Once the prerequisites are installed. Run the [tools/Build-LogstashArchives.ps1](tools/Build-LogstashArchives.ps1) script.
@@ -63,8 +63,11 @@ In order to install and test the binaries you will need an Apprenda Platform (ve
 
 ```powershell
 $apprendaCredentials = Get-Credential
-.\tools\Build-LogstashArchives.ps1 -Configuration $Configuration
-.\tools\Deploy-LogForwardingService.ps1 -PlatformUrl $PlatformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $Tenant
+$configuration = "Debug"
+$platformUrl = "https://yourplatform/"
+$tenant = "YourTenant"
+.\tools\Build-LogstashArchives.ps1 -Configuration $configuration
+.\tools\Deploy-LogForwardingService.ps1 -PlatformUrl $platformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $tenant
 .\tools\Promote-LogForwardingService.ps1
 ```
 
@@ -89,8 +92,9 @@ Setting up logstash in docker goes beyond the scope of this document.  [tools/Te
 
 ```powershell
 $apprendaCredentials = Get-Credential
-.\tools\Test-LogForwardingService.ps1 -Configuration "Debug" -Step 1 -PlatformUrl $PlatformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $Tenant
-.\tools\Test-LogForwardingService.ps1 -Configuration "Debug" -Step 2 -PlatformUrl $PlatformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $Tenant
+$configuration = "Debug"
+$platformUrl = "https://yourplatform/"
+$tenant = "YourTenant"
+.\tools\Test-LogForwardingService.ps1 -Configuration $configuration -Step 1 -PlatformUrl $platformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $tenant
+.\tools\Test-LogForwardingService.ps1 -Configuration $configuration -Step 2 -PlatformUrl $platformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $tenant
 ```
-
-
