@@ -59,10 +59,10 @@ Once the prerequisites are installed. Run the [tools/BuildAndPackage-LogForwardi
 This will create logstashforwarder.zip and logstashAddOn.zip archives in this folder.
 
 # Installation
-## Log Forwarding Service and Logstash AddOn
+## Log Forwarding Extension Service and Logstash AddOn
 In order to install and test the binaries you will need an Apprenda Platform (version 6.7 or later) available that is able to communicate to the test Elastic Stack.  [Installation of the Apprenda Platform](http://docs.apprenda.com/current/download) is outside of the scope of this document.
 
-1. Build the log forwarder application and logstash addon archives per the instructions above.
+1. Build the log forwarder extension service application and logstash addon archives per the instructions above.
 2. Deploy the logstash log forwarding extension and the logstash add-on using the [tools/Deploy-LogForwardingComponents.ps1](tools/Deploy-LogForwardingComponents.ps1) script.
 3. Log into the platform SOC and set the logstash connection properties for the logstash add-on.  The instructions for doing so are at the end of the Deploy-LogForwardingComponents.ps1 and are covered later in this document.
 4. Provision and instance of the add-on and promote the log forwarding extension using the [tools/Promote-LogForwardingComponents.ps1](tools/Promote-LogForwardingComponents.ps1) script.
@@ -115,7 +115,9 @@ input {
 ```
 
 # Testing the code
-(Setting up logstash in docker)[https://www.elastic.co/guide/en/logstash/current/docker.html] goes beyond the scope of this document.  [tools/Test-LogForwardingService.ps1](tools/Test-LogForwardingService.ps1) can be used to run a test of the code.  As with installing the logstash add-on, there is a manual step of setting up the add-on properties.
+[Setting up logstash in docker](https://www.elastic.co/guide/en/logstash/current/docker.html) goes beyond the scope of this document.  [tools/Test-LogForwardingService.ps1](tools/Test-LogForwardingService.ps1) can be used to run a test of the code.  As with installing the logstash add-on, there is a manual step of setting up the add-on properties.
+
+The test code will start up an Elastic(ELK) stack in a Powershell Job and will send forward logs to Logstash, while watching the console output of the various components in the stack.
 
 ```powershell
 $apprendaCredentials = Get-Credential
@@ -124,4 +126,19 @@ $platformUrl = "https://yourplatform/"
 $tenant = "YourTenant"
 .\tools\Test-LogForwardingService.ps1 -Configuration $configuration -Step 1 -PlatformUrl $platformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $tenant
 .\tools\Test-LogForwardingService.ps1 -Configuration $configuration -Step 2 -PlatformUrl $platformUrl -Username $apprendaCredentials.UserName -Password $apprendaCredentials.GetNetworkCredential().Password -Tenant $tenant
+```
+
+When the test is successful, you will see messages like this coming from logstash.
+![Success](images/Success.png)
+
+To stop the test type Ctrl-C, then stop the "ELK Job" Powershell job.
+```
+logstash_1       | 2017-06-07T16:04:41.515Z 172.19.0.1 %{message}
+logstash_1       | 2017-06-07T16:04:41.515Z 172.19.0.1 %{message}
+logstash_1       | 2017-06-07T16:04:41.558Z 172.19.0.1 %{message}
+```
+```powershell
+^C
+Get-Job 'ELK Job' | Stop-Job
+Remove-Job 'ELK Job'
 ```
