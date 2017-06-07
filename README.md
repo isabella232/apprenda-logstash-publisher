@@ -3,7 +3,7 @@ This application represents a possible solution to publish apprenda logs to
 logstash.  It is based on guidance [provided by Apprenda for integrating with Splunk](https://github.com/Apprenda/Splunk).
 
 ## A note about Audit Logs
-[Apprenda Audit Logs](http://docs.apprenda.com/7-0/managing-event-logs#Audit Logs) are note currently supported by the log forwarder extension.  In order to aggregate these logs into Logstash, it's suggested that you use the [Logstash jdbc input plugin](https://www.elastic.co/guide/en/logstash/current/plugins-inputs-jdbc.html) attached to the dbo.AuditLog table in the ```Apprenda Auditing``` database.
+[Apprenda Audit Logs]("http://docs.apprenda.com/7-0/managing-event-logs#Audit Logs"g) are note currently supported by the log forwarder extension.  In order to aggregate these logs into Logstash, it's suggested that you use the [Logstash jdbc input plugin](https://www.elastic.co/guide/en/logstash/current/plugins-inputs-jdbc.html) attached to the dbo.AuditLog table in the ```Apprenda Auditing``` database.
 
 # Building the source
 ## Prerequisites
