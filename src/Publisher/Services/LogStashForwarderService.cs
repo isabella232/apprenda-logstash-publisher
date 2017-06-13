@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel;
 using System.Threading;
-using Apprenda.ClientServices.LogStash.Publishers;
 using Apprenda.SaaSGrid.Extensions.DTO;
 
 namespace Apprenda.ClientServices.LogStash.Services
