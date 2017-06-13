@@ -14,7 +14,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Manifests", "Manifests", "{A23B36F2-038E-4269-82BD-A528514F22D0}"
 	ProjectSection(SolutionItems) = preProject
 		Manifests\AddonManifest.xml = Manifests\AddonManifest.xml
-		Manifests\DeploymentManifest.xml = Manifests\DeploymentManifest.xml
 	EndProjectSection
 EndProject
 Global
