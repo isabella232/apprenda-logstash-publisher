@@ -29,7 +29,7 @@ else {
 
 # Download and install Powershell-JvB
 Write-Host "Installing Powershell-JvB Module."
-Invoke-WebRequest -Uri https://github.com/JasonvanBrackel/powershell/archive/master.zip -OutFile $powershellZipPath
+Invoke-WebRequest -Uri https://github.com/JasonvanBrackel/powershell-personal/archive/master.zip -OutFile $powershellZipPath
 Unblock-File -Path $powershellZipPath
 Expand-Archive -Path $powershellZipPath -DestinationPath $powershellPath
 Push-Location "$powershellPath\powershell-master"

@@ -23,7 +23,7 @@ You may build and install prerequisites by hand or use the provided script in [t
 
 This script will:
 * Download and install the Apprenda SDK if it's not installed.
-* Download the [prerequisite powershell library](https://github.com/jasonvanbrackel/powershell)
+* Download the [prerequisite powershell library](https://github.com/jasonvanbrackel/powershell-personal)
 * Install the preprequisite powershell library as Powershell-JvB
 * Import the Powershell-JvB module into the current powershell session.
 * Install [chocolatey](https://chocolatey.org) if it's not installed
@@ -41,7 +41,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 The [Apprenda SDK](https://docs.apprenda.com/downloads#tools) is a dependency to build this project.
 
 ### Powershell Library
-The build scripts developed for this application rely upon the powershell library available at [https://github.com/jasonvanbrackel/powershell](https://github.com/jasonvanbrackel/powershell).  
+The build scripts developed for this application rely upon the powershell library available at [https://github.com/jasonvanbrackel/powershell-personal](https://github.com/jasonvanbrackel/powershell-personal).  
 
 ### MSBuild 
 [MSBuild](https://github.com/Microsoft/msbuild) is used by the scripts to build the various Visual Studio Solution files.

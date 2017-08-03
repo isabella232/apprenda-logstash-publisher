@@ -24,6 +24,9 @@ process {
     "Cleaning Solution."
     Clean-Solution -solutionPath $solutionPath -configuration $Configuration
 
+    "Restoring nuget references"
+    .\tools\nuget.exe restore $solutionPath
+
     "Building Solution."
     Build-Solution -solutionPath $solutionPath -configuration $Configuration
 
