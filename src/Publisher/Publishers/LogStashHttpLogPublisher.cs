@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Apprenda.ClientServices.LogStash.Services;
 using Apprenda.SaaSGrid.Extensions.DTO;
 using Newtonsoft.Json;
+using System.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace Apprenda.ClientServices.LogStash.Publishers
 {
@@ -34,7 +36,12 @@ namespace Apprenda.ClientServices.LogStash.Publishers
                     {
                         try
                         {
-                            var logMessageJson = JsonConvert.SerializeObject(logMessageObj);
+                            // enhance the log message object with the environment URL for
+                            // this Apprenda instance
+                            var environmentURL = ConfigurationManager.AppSettings["environmentURL"];
+                            var jo = JObject.FromObject(logMessageObj);
+                            jo.Add("EnvironmentURL", environmentURL);
+                            var logMessageJson = JsonConvert.SerializeObject(jo);
 
                             var client = CreateOrGetHttpClient();
                             client.PostAsync("", new StringContent(logMessageJson)).Wait();
